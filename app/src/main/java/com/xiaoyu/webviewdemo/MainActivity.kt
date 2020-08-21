@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         open_web.setOnClickListener {
             AutoServiceLoader.load(IWebViewService::class.java)
-                .startWebActivity(this, "https://www.baidu.com", "这是一个标题", true)
+                .startWebActivity(this, "https://www.baidu.com", "这是一个标题", false)
         }
     }
 }

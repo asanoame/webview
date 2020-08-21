@@ -28,4 +28,7 @@ class WebViewServiceImpl : IWebViewService {
             putExtra(WEB_IS_SHOW_TOOLBAR, isShowToolbar)
         })
     }
+
+    override fun getWebFragment(url: String): WebFragment =
+        WebFragment.newInstance(url)
 }

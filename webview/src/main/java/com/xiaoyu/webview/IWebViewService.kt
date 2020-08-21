@@ -10,5 +10,5 @@ import android.content.Context
  */
 interface IWebViewService {
     fun startWebActivity(context: Context, url: String, title: String, isShowToolbar: Boolean)
-//    fun getWebFragment(): WebFragment
+    fun getWebFragment(url: String): WebFragment
 }

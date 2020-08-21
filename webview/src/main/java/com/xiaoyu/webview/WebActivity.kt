@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewStub
 import androidx.appcompat.widget.Toolbar
+import com.xiaoyu.webview.utils.AutoServiceLoader
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_SHOW_TOOLBAR
 import com.xiaoyu.webview.utils.Contacts.WEB_TITLE
+import com.xiaoyu.webview.utils.Contacts.WEB_URL
 
 class WebActivity : AppCompatActivity() {
 
@@ -15,6 +17,7 @@ class WebActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
         initToolbar()
+        initWebFragment()
     }
 
     private fun initToolbar() {
@@ -28,5 +31,12 @@ class WebActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+    }
+
+    private fun initWebFragment() {
+        val url = intent.getStringExtra(WEB_URL) ?: ""
+        supportFragmentManager.beginTransaction()
+            .add(R.id.web_fragment, AutoServiceLoader.load(IWebViewService::class.java).getWebFragment(url))
+            .commit()
     }
 }
