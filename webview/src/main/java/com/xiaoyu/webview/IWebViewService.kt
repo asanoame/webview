@@ -1,6 +1,8 @@
 package com.xiaoyu.webview
 
 import android.content.Context
+import com.xiaoyu.webview.loadsir.ErrorCallback
+import com.xiaoyu.webview.loadsir.LoadingCallback
 
 /**
  * XiaoYu

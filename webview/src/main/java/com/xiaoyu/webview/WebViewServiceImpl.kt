@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import com.google.auto.service.AutoService
+import com.xiaoyu.webview.loadsir.ErrorCallback
+import com.xiaoyu.webview.loadsir.LoadingCallback
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_SHOW_TOOLBAR
 import com.xiaoyu.webview.utils.Contacts.WEB_TITLE
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
