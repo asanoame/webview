@@ -2,6 +2,7 @@ package com.xiaoyu.webview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.ViewStub
 import androidx.appcompat.widget.Toolbar
 import com.xiaoyu.webview.utils.AutoServiceLoader
@@ -33,7 +34,13 @@ class WebActivity : AppCompatActivity() {
         toolbar.title = intent.getStringExtra(WEB_TITLE)
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener {
-            finish()
+            val isConsume = mWebFragment.dispatchNavigationClick()
+            if (isConsume) {
+                LogUtils.d(msg = "isConsume=$isConsume,WebFragment 消费点击事件")
+            } else {
+                LogUtils.d(msg = "isConsume=$isConsume,WebFragment 没有消费消费点击事件")
+                finish()
+            }
         }
     }
 

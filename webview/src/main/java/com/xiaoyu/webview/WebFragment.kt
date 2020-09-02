@@ -142,4 +142,19 @@ class WebFragment : Fragment(), OnRefreshListener {
     override fun onRefresh(refreshLayout: RefreshLayout) {
         mWebView.reload()
     }
+
+    fun dispatchNavigationClick(): Boolean {
+        LogUtils.d(msg = "↓----------------------↓")
+        LogUtils.d(msg = "接收到Activity的返回事件分发")
+        val isConsume = if (mWebView.canGoBack()) {
+            mWebView.goBack()
+            LogUtils.d(msg = "WebView 可以返回，消费掉本次点击")
+            true
+        } else {
+            LogUtils.d(msg = "WebView 没有返回，不消费")
+            false
+        }
+        LogUtils.d(msg = "↑----------------------↑")
+        return isConsume
+    }
 }
