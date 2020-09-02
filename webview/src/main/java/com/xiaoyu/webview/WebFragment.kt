@@ -1,7 +1,6 @@
 package com.xiaoyu.webview
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -50,11 +49,6 @@ class WebFragment : Fragment(), OnRefreshListener {
             isSuccess = false
         }
 
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-            super.onPageStarted(view, url, favicon)
-            isSuccess = true
-        }
-
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             LogUtils.d(msg = "加载完毕, url=$url")
@@ -80,12 +74,25 @@ class WebFragment : Fragment(), OnRefreshListener {
                     mRefreshLayout.finishRefresh(false)
                 }
             }
+            isSuccess = true
             LogUtils.d(msg = "-----------------------")
         }
     }
 
     private val mWebChromeClient = object : WebChromeClient() {
-
+        override fun onReceivedTitle(view: WebView?, title: String) {
+            if (title == "about:blank") {
+                LogUtils.d(msg = "标题是空页面标题，不需要刷新")
+                return
+            }
+            val requireActivity = requireActivity()
+            if (requireActivity is WebActivity) {
+                requireActivity.updateTitle(title)
+                LogUtils.d(msg = "刷新标题 title=$title")
+            } else {
+                LogUtils.d(msg = "activity 不是WebActivity，不需要刷新")
+            }
+        }
     }
 
     override fun onCreateView(

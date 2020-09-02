@@ -47,4 +47,10 @@ class WebActivity : AppCompatActivity() {
             .add(R.id.web_fragment, mWebFragment)
             .commit()
     }
+
+    fun updateTitle(title: String) {
+        if (this::toolbar.isInitialized) {
+            toolbar.title = title
+        }
+    }
 }
