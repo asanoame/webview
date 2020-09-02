@@ -9,4 +9,5 @@ object Contacts {
     const val WEB_URL = "web_url"
     const val WEB_TITLE = "web_title"
     const val WEB_IS_SHOW_TOOLBAR = "web_is_show_toolbar"
+    const val WEB_IS_CAN_REFRESH = "web_can_refresh"
 }

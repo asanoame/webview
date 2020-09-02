@@ -10,6 +10,6 @@ import com.xiaoyu.webview.WebViewKit
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        WebViewKit.errorCallback = MyErrorCallback::class.java
+        WebViewKit.getInstance().setErrorCallback(MyErrorCallback::class.java)
     }
 }

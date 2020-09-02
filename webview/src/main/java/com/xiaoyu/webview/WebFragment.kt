@@ -1,5 +1,6 @@
 package com.xiaoyu.webview
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,20 +8,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
+import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
-import com.xiaoyu.webview.WebViewKit.errorCallback
-import com.xiaoyu.webview.WebViewKit.loadingCallback
-import com.xiaoyu.webview.loadsir.ErrorCallback
-import com.xiaoyu.webview.loadsir.LoadingCallback
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
 import com.xiaoyu.webview.utils.LogUtils
 
 
-class WebFragment : Fragment() {
+class WebFragment : Fragment(), OnRefreshListener {
+
+    companion object {
+        @JvmStatic
+        fun newInstance(url: String, isCanRefresh: Boolean) = WebFragment().apply {
+            arguments = Bundle().apply {
+                putString(WEB_URL, url)
+                putBoolean(WEB_IS_CAN_REFRESH, isCanRefresh)
+            }
+        }
+    }
 
     private lateinit var mWebView: WebView
+    private lateinit var mRefreshLayout: SmartRefreshLayout
+
     private lateinit var mLoadService: LoadService<Any>
+
+    private lateinit var mWebViewKit: WebViewKit
 
     private var isSuccess = true
 
@@ -49,10 +65,20 @@ class WebFragment : Fragment() {
             }
             if (isSuccess) {
                 LogUtils.d(msg = "加载成功，显示正常页面")
-                mLoadService.showSuccess()
+                if (mLoadService.currentCallback !is SuccessCallback) {
+                    mLoadService.showSuccess()
+                }
+                if (mRefreshLayout.isRefreshing) {
+                    mRefreshLayout.finishRefresh(true)
+                }
             } else {
                 LogUtils.d(msg = "加载失败,显示Error界面")
-                mLoadService.showCallback(errorCallback)
+                if (mLoadService.currentCallback !is SuccessCallback) {
+                    mLoadService.showCallback(mWebViewKit.errorCallback)
+                }
+                if (mRefreshLayout.isRefreshing) {
+                    mRefreshLayout.finishRefresh(false)
+                }
             }
             LogUtils.d(msg = "-----------------------")
         }
@@ -66,20 +92,21 @@ class WebFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mWebViewKit = WebViewKit.getInstance()
         return initLoadSir(inflater, container)
     }
 
     private fun initLoadSir(inflater: LayoutInflater, container: ViewGroup?): View {
-
         val loadSir = LoadSir.Builder()
-            .addCallback(loadingCallback.newInstance())
-            .addCallback(errorCallback.newInstance())
+            .addCallback(mWebViewKit.loadingCallback.newInstance())
+            .addCallback(mWebViewKit.errorCallback.newInstance())
             .build()
 
         val view = inflater.inflate(R.layout.fragment_web_view, container, false)
         initWebView(view)
+        initRefreshLayout(view)
         mLoadService = loadSir.register(view) {
-            mLoadService.showCallback(loadingCallback)
+            mLoadService.showCallback(mWebViewKit.loadingCallback)
             mWebView.reload()
         }
         return mLoadService.loadLayout
@@ -92,17 +119,20 @@ class WebFragment : Fragment() {
         mWebView.webChromeClient = mWebChromeClient
     }
 
+    private fun initRefreshLayout(view: View) {
+        mRefreshLayout = view.findViewById(R.id.refresh_layout)
+        mRefreshLayout.setEnableRefresh(arguments?.getBoolean(WEB_IS_CAN_REFRESH) ?: true)
+        val constructor = mWebViewKit.refreshHeader.getConstructor(Context::class.java)
+        mRefreshLayout.setRefreshHeader(constructor.newInstance(requireContext()))
+        mRefreshLayout.setOnRefreshListener(this)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mLoadService.showCallback(loadingCallback)
+        mLoadService.showCallback(mWebViewKit.loadingCallback)
         mWebView.loadUrl(arguments?.getString(WEB_URL) ?: "")
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(url: String) = WebFragment().apply {
-            arguments = Bundle().apply {
-                putString(WEB_URL, url)
-            }
-        }
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        mWebView.reload()
     }
 }

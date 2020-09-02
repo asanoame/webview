@@ -4,8 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import com.google.auto.service.AutoService
-import com.xiaoyu.webview.loadsir.ErrorCallback
-import com.xiaoyu.webview.loadsir.LoadingCallback
+import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_SHOW_TOOLBAR
 import com.xiaoyu.webview.utils.Contacts.WEB_TITLE
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
@@ -21,16 +20,18 @@ class WebViewServiceImpl : IWebViewService {
         context: Context,
         url: String,
         title: String,
-        isShowToolbar: Boolean
+        isShowToolbar: Boolean,
+        isCanRefresh: Boolean
     ) {
         context.startActivity(Intent().apply {
             component = ComponentName(context, WebActivity::class.java)
             putExtra(WEB_URL, url)
             putExtra(WEB_TITLE, title)
             putExtra(WEB_IS_SHOW_TOOLBAR, isShowToolbar)
+            putExtra(WEB_IS_CAN_REFRESH, isCanRefresh)
         })
     }
 
-    override fun getWebFragment(url: String): WebFragment =
-        WebFragment.newInstance(url)
+    override fun getWebFragment(url: String, isCanRefresh: Boolean): WebFragment =
+        WebFragment.newInstance(url, isCanRefresh)
 }
