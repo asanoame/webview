@@ -16,6 +16,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
 import com.xiaoyu.webview.utils.LogUtils
+import com.xiaoyu.webview.webviewprocess.WebViewDefaultSettings
 
 
 class WebFragment : Fragment(), OnRefreshListener {
@@ -121,7 +122,7 @@ class WebFragment : Fragment(), OnRefreshListener {
 
     private fun initWebView(view: View) {
         mWebView = view.findViewById(R.id.web_view)
-        mWebView.settings.javaScriptEnabled = true
+        WebViewDefaultSettings.newInstance().setSettings(mWebView)
         mWebView.webViewClient = mWebViewClient
         mWebView.webChromeClient = mWebChromeClient
     }
