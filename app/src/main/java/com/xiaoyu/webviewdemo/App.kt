@@ -10,6 +10,9 @@ import com.xiaoyu.webview.WebViewKit
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        WebViewKit.getInstance().setErrorCallback(MyErrorCallback::class.java)
+        WebViewKit.getInstance()
+            .setErrorCallback(MyErrorCallback::class.java)
+            .openLog(true)
+            .setJavascriptInterfaceName("demoWebView")
     }
 }

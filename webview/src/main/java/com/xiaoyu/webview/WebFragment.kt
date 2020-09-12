@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
 import androidx.fragment.app.Fragment
-import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -16,10 +14,10 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
 import com.xiaoyu.webview.utils.LogUtils
-import com.xiaoyu.webview.webviewprocess.WebViewDefaultSettings
+import com.xiaoyu.webview.webviewprocess.BaseWebView
 
 
-class WebFragment : Fragment(), OnRefreshListener {
+class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
 
     companion object {
         @JvmStatic
@@ -31,70 +29,12 @@ class WebFragment : Fragment(), OnRefreshListener {
         }
     }
 
-    private lateinit var mWebView: WebView
+    private lateinit var mWebView: BaseWebView
     private lateinit var mRefreshLayout: SmartRefreshLayout
 
     private lateinit var mLoadService: LoadService<Any>
 
     private lateinit var mWebViewKit: WebViewKit
-
-    private var isSuccess = true
-
-    private val mWebViewClient = object : WebViewClient() {
-        override fun onReceivedError(
-            view: WebView?,
-            request: WebResourceRequest?,
-            error: WebResourceError
-        ) {
-            LogUtils.d(msg = "加载失败")
-            isSuccess = false
-        }
-
-        override fun onPageFinished(view: WebView?, url: String?) {
-            super.onPageFinished(view, url)
-            LogUtils.d(msg = "加载完毕, url=$url")
-            if (url == "about:blank") {
-                LogUtils.d(msg = "加载空白页，返回")
-                LogUtils.d(msg = "-----------------------")
-                return
-            }
-            if (isSuccess) {
-                LogUtils.d(msg = "加载成功，显示正常页面")
-                if (mLoadService.currentCallback !is SuccessCallback) {
-                    mLoadService.showSuccess()
-                }
-                if (mRefreshLayout.isRefreshing) {
-                    mRefreshLayout.finishRefresh(true)
-                }
-            } else {
-                LogUtils.d(msg = "加载失败,显示Error界面")
-                if (mLoadService.currentCallback !is SuccessCallback) {
-                    mLoadService.showCallback(mWebViewKit.errorCallback)
-                }
-                if (mRefreshLayout.isRefreshing) {
-                    mRefreshLayout.finishRefresh(false)
-                }
-            }
-            isSuccess = true
-            LogUtils.d(msg = "-----------------------")
-        }
-    }
-
-    private val mWebChromeClient = object : WebChromeClient() {
-        override fun onReceivedTitle(view: WebView?, title: String) {
-            if (title == "about:blank") {
-                LogUtils.d(msg = "标题是空页面标题，不需要刷新")
-                return
-            }
-            val requireActivity = requireActivity()
-            if (requireActivity is WebActivity) {
-                requireActivity.updateTitle(title)
-                LogUtils.d(msg = "刷新标题 title=$title")
-            } else {
-                LogUtils.d(msg = "activity 不是WebActivity，不需要刷新")
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,9 +62,7 @@ class WebFragment : Fragment(), OnRefreshListener {
 
     private fun initWebView(view: View) {
         mWebView = view.findViewById(R.id.web_view)
-        WebViewDefaultSettings.newInstance().setSettings(mWebView)
-        mWebView.webViewClient = mWebViewClient
-        mWebView.webChromeClient = mWebChromeClient
+        mWebView.registerWebViewCallback(this)
     }
 
     private fun initRefreshLayout(view: View) {
@@ -144,7 +82,10 @@ class WebFragment : Fragment(), OnRefreshListener {
         mWebView.reload()
     }
 
-    fun dispatchNavigationClick(): Boolean {
+    /**
+     * 分发来自[WebActivity]的返回事件
+     */
+    fun dispatchBackClick(): Boolean {
         LogUtils.d(msg = "↓----------------------↓")
         LogUtils.d(msg = "接收到Activity的返回事件分发")
         val isConsume = if (mWebView.canGoBack()) {
@@ -157,5 +98,28 @@ class WebFragment : Fragment(), OnRefreshListener {
         }
         LogUtils.d(msg = "↑----------------------↑")
         return isConsume
+    }
+
+    override fun onLoadStart(url: String) {
+        mLoadService.showCallback(mWebViewKit.loadingCallback)
+    }
+
+    override fun onLoadFinish(url: String) {}
+
+    override fun onError() {
+        mLoadService.showCallback(mWebViewKit.errorCallback)
+    }
+
+    override fun onSuccess() {
+        mLoadService.showSuccess()
+    }
+
+    override fun onUpdateTitle(title: String) {
+        val parentActivity = requireActivity()
+        if (parentActivity is WebActivity) {
+            parentActivity.updateTitle(title)
+        } else {
+            LogUtils.d(msg = "activity 不是WebActivity，不需要刷新")
+        }
     }
 }

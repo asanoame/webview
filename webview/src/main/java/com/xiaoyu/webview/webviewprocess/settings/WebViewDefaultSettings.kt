@@ -1,4 +1,4 @@
-package com.xiaoyu.webview.webviewprocess
+package com.xiaoyu.webview.webviewprocess.settings
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +15,8 @@ import com.xiaoyu.webview.utils.LogUtils
  */
 class WebViewDefaultSettings private constructor() {
     companion object {
-        fun newInstance() = WebViewDefaultSettings()
+        fun newInstance() =
+            WebViewDefaultSettings()
     }
 
     @Suppress("DEPRECATION")
@@ -52,11 +53,9 @@ class WebViewDefaultSettings private constructor() {
         settings.setSupportMultipleWindows(false)
         settings.blockNetworkImage = false //是否阻塞加载网络图片  协议http or https
         settings.allowFileAccess = true //允许加载本地文件html  file协议
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            settings.allowFileAccessFromFileURLs = false//通过 file url 加载的 Javascript 读取其他的本地文件 .建议关闭
-            settings.allowUniversalAccessFromFileURLs =
-                false//允许通过 file url 加载的 Javascript 可以访问其他的源，包括其他的文件和 http，https 等其他的源
-        }
+        settings.allowFileAccessFromFileURLs = false //通过 file url 加载的 Javascript 读取其他的本地文件 .建议关闭
+        settings.allowUniversalAccessFromFileURLs =
+            false //允许通过 file url 加载的 Javascript 可以访问其他的源，包括其他的文件和 http，https 等其他的源
         settings.javaScriptCanOpenWindowsAutomatically = true
         settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         settings.savePassword = false
@@ -79,9 +78,7 @@ class WebViewDefaultSettings private constructor() {
 
         // 用户可以自己设置useragent
         // mWebSettings.setUserAgentString("webprogress/build you agent info");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-        }
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     }
 
     @Suppress("DEPRECATION")

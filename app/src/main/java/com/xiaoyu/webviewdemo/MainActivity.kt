@@ -13,9 +13,9 @@ class MainActivity : AppCompatActivity() {
         open_web.setOnClickListener {
             AutoServiceLoader.load(IWebViewService::class.java)
                 .startWebActivity(
-                    this, "http://www.baidu.com", "这是一个标题",
+                    this, "file:///android_asset/demo.html", "本地测试",
                     isShowToolbar = true,
-                    isCanRefresh = true
+                    isCanRefresh = false
                 )
         }
     }

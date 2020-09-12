@@ -1,0 +1,43 @@
+package com.xiaoyu.webview.webviewprocess
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.AttributeSet
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
+import com.xiaoyu.webview.WebViewCallback
+import com.xiaoyu.webview.WebViewKit
+import com.xiaoyu.webview.utils.LogUtils
+import com.xiaoyu.webview.webviewprocess.settings.WebViewDefaultSettings
+import com.xiaoyu.webview.webviewprocess.webchromeclient.DefaultWebChromeClient
+import com.xiaoyu.webview.webviewprocess.webviewclient.DefaultWebViewClient
+
+/**
+ * XiaoYu
+ * 2020/9/12 23:20
+ */
+class BaseWebView : WebView {
+    constructor(context: Context)
+            : super(context)
+
+    constructor(context: Context, attrs: AttributeSet)
+            : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
+            : super(context, attrs, defStyleAttr)
+
+    init {
+        WebViewDefaultSettings.newInstance().setSettings(this)
+        addJavascriptInterface(this, WebViewKit.getInstance().javascriptInterfaceName)
+    }
+
+    fun registerWebViewCallback(viewViewCallback: WebViewCallback) {
+        webChromeClient = DefaultWebChromeClient(viewViewCallback)
+        webViewClient = DefaultWebViewClient(viewViewCallback)
+    }
+
+    @JavascriptInterface
+    fun takeNativeAction(jsParams: String) {
+        LogUtils.i(msg = "jsParams=$jsParams")
+    }
+}

@@ -12,7 +12,7 @@ import com.xiaoyu.webview.BuildConfig
  */
 object LogUtils {
 
-    private val DEBUG = BuildConfig.DEBUG
+    var DEBUG = false
 
     @JvmStatic
     fun i(tag: String = getFileLineMethod(), msg: String, tr: Throwable? = null) {

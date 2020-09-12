@@ -1,9 +1,11 @@
 package com.xiaoyu.webview
 
+import android.webkit.JavascriptInterface
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.xiaoyu.webview.loadsir.ErrorCallback
 import com.xiaoyu.webview.loadsir.LoadingCallback
+import com.xiaoyu.webview.utils.LogUtils
 
 /**
  * XiaoYu
@@ -22,6 +24,9 @@ class WebViewKit private constructor() {
         @Synchronized
         fun getInstance(): WebViewKit = sInstance!!
     }
+
+    var javascriptInterfaceName: String = "defaultName"
+        private set
 
     var loadingCallback: Class<out LoadingCallback> = LoadingCallback::class.java
         private set
@@ -42,6 +47,16 @@ class WebViewKit private constructor() {
 
     fun setRefreshHeader(refreshHeader: Class<out RefreshHeader>): WebViewKit {
         this.refreshHeader = refreshHeader
+        return this
+    }
+
+    fun openLog(isPrintLog: Boolean): WebViewKit {
+        LogUtils.DEBUG = isPrintLog
+        return this
+    }
+
+    fun setJavascriptInterfaceName(name: String): WebViewKit {
+        javascriptInterfaceName = name
         return this
     }
 }
