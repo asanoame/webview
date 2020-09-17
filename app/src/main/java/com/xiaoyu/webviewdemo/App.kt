@@ -16,7 +16,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this.applicationContext
-        WebViewComponent.getInstance()
+        WebViewComponent.init(this)
             .setErrorCallback(MyErrorCallback::class.java)
             .openLog(true)
             .setJavascriptInterfaceName("demoWebView")

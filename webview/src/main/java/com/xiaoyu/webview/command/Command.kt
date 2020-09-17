@@ -9,7 +9,7 @@ interface Command {
     fun name(): String
 
     /**
-     *[param]由WebView传入的参数
+     *[params]由WebView传入的参数
      */
-    fun execute(param: MutableMap<String, Any>)
+    fun execute(params: MutableMap<String, Any>)
 }

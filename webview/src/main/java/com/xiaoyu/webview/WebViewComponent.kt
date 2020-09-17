@@ -15,6 +15,13 @@ import com.xiaoyu.webview.utils.LogUtils
  */
 class WebViewComponent private constructor() {
     companion object {
+        private var isInit = false
+        fun init(context: Context): WebViewComponent {
+            sInstance!!.context = context.applicationContext
+            isInit = true
+            return sInstance!!
+        }
+
         private var sInstance: WebViewComponent? = null
             get() {
                 if (field == null) {
@@ -24,8 +31,16 @@ class WebViewComponent private constructor() {
             }
 
         @Synchronized
-        fun getInstance(): WebViewComponent = sInstance!!
+        fun getInstance(): WebViewComponent {
+            if (!isInit) {
+                throw RuntimeException("请先调用 init(Context)")
+            }
+            return sInstance!!
+        }
     }
+
+    lateinit var context: Context
+        private set
 
     var javascriptInterfaceName: String = "defaultName"
         private set

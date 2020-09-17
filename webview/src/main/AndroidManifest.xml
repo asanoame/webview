@@ -8,7 +8,9 @@
     <application>
         <activity
             android:name=".WebActivity"
-            android:theme="@style/WebActivityTheme"/>
+            android:process="com.xiaoyu.webview"
+            android:theme="@style/WebActivityTheme" />
+        <service android:name=".mainprocess.MainCommandService" />
     </application>
 
 </manifest>
