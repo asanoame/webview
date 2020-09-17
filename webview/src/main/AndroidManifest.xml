@@ -8,7 +8,7 @@
     <application>
         <activity
             android:name=".WebActivity"
-            android:theme="@style/WebActivityTheme" />
+            android:theme="@style/WebActivityTheme"/>
     </application>
 
 </manifest>

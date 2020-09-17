@@ -1,6 +1,7 @@
 package com.xiaoyu.webview
 
 import android.content.Context
+import com.google.gson.Gson
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.xiaoyu.webview.loadsir.ErrorCallback
@@ -36,6 +37,8 @@ class WebViewComponent private constructor() {
 
     var refreshHeader: Class<out RefreshHeader> = ClassicsHeader::class.java
 
+    private var gson: Gson? = null
+
     fun setLoadingCallback(loadingCallback: Class<out LoadingCallback>): WebViewComponent {
         this.loadingCallback = loadingCallback
         return this
@@ -59,6 +62,18 @@ class WebViewComponent private constructor() {
     fun setJavascriptInterfaceName(name: String): WebViewComponent {
         javascriptInterfaceName = name
         return this
+    }
+
+    fun setGson(gson: Gson): WebViewComponent {
+        this.gson = gson
+        return this
+    }
+
+    fun getGson(): Gson {
+        if (gson == null) {
+            gson = Gson()
+        }
+        return gson!!
     }
 
     fun startWeb(

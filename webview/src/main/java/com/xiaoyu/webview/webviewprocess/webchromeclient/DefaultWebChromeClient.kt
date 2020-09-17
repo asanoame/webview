@@ -3,7 +3,7 @@ package com.xiaoyu.webview.webviewprocess.webchromeclient
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import com.xiaoyu.webview.WebViewCallback
+import com.xiaoyu.webview.webviewprocess.WebViewCallback
 import com.xiaoyu.webview.utils.LogUtils
 
 /**

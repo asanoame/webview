@@ -15,6 +15,7 @@ import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
 import com.xiaoyu.webview.utils.LogUtils
 import com.xiaoyu.webview.webviewprocess.BaseWebView
+import com.xiaoyu.webview.webviewprocess.WebViewCallback
 
 
 class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {

@@ -5,7 +5,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.xiaoyu.webview.WebViewCallback
+import com.xiaoyu.webview.webviewprocess.WebViewCallback
 import com.xiaoyu.webview.utils.LogUtils
 
 /**
