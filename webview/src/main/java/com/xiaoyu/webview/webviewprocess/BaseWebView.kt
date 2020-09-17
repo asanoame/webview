@@ -1,12 +1,11 @@
 package com.xiaoyu.webview.webviewprocess
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.xiaoyu.webview.WebViewCallback
-import com.xiaoyu.webview.WebViewKit
+import com.xiaoyu.webview.WebViewComponent
 import com.xiaoyu.webview.utils.LogUtils
 import com.xiaoyu.webview.webviewprocess.settings.WebViewDefaultSettings
 import com.xiaoyu.webview.webviewprocess.webchromeclient.DefaultWebChromeClient
@@ -28,7 +27,7 @@ class BaseWebView : WebView {
 
     init {
         WebViewDefaultSettings.newInstance().setSettings(this)
-        addJavascriptInterface(this, WebViewKit.getInstance().javascriptInterfaceName)
+        addJavascriptInterface(this, WebViewComponent.getInstance().javascriptInterfaceName)
     }
 
     fun registerWebViewCallback(viewViewCallback: WebViewCallback) {

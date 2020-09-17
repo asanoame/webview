@@ -1,7 +1,7 @@
 package com.xiaoyu.webviewdemo
 
 import android.app.Application
-import com.xiaoyu.webview.WebViewKit
+import com.xiaoyu.webview.WebViewComponent
 
 /**
  * XiaoYu
@@ -10,7 +10,7 @@ import com.xiaoyu.webview.WebViewKit
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        WebViewKit.getInstance()
+        WebViewComponent.getInstance()
             .setErrorCallback(MyErrorCallback::class.java)
             .openLog(true)
             .setJavascriptInterfaceName("demoWebView")

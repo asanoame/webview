@@ -34,13 +34,13 @@ class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
 
     private lateinit var mLoadService: LoadService<Any>
 
-    private lateinit var mWebViewKit: WebViewKit
+    private lateinit var mWebViewKit: WebViewComponent
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mWebViewKit = WebViewKit.getInstance()
+        mWebViewKit = WebViewComponent.getInstance()
         return initLoadSir(inflater, container)
     }
 
