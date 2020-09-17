@@ -9,6 +9,13 @@ import android.content.Context
  * 如果要实现组件化的话请把此接口下沉
  */
 interface IWebViewService {
-    fun startWebActivity(context: Context, url: String, title: String, isShowToolbar: Boolean)
-//    fun getWebFragment(): WebFragment
+    fun startWebActivity(
+        context: Context,
+        url: String,
+        title: String,
+        isShowToolbar: Boolean,
+        isCanRefresh: Boolean
+    )
+
+    fun getWebFragment(url: String, isCanRefresh: Boolean): WebFragment
 }

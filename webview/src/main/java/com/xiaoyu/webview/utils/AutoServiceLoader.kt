@@ -7,7 +7,7 @@ import java.util.*
  * XiaoYu
  * 2020/8/20 00:09
  */
-object AutoServiceLoader {
+internal object AutoServiceLoader {
     fun <S> load(clazz: Class<S>): S {
         val iterator = ServiceLoader.load(clazz).iterator()
         if (iterator.hasNext()) {
@@ -19,6 +19,4 @@ object AutoServiceLoader {
 
     class ServiceImplNotFoundException(serviceName: String) :
         RuntimeException("$serviceName is not implemented.")
-
-
 }

@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xiaoyu.webview">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
         <activity
             android:name=".WebActivity"
+            android:process="com.xiaoyu.webview"
             android:theme="@style/WebActivityTheme" />
+        <service android:name=".mainprocess.MainCommandService" />
     </application>
 
 </manifest>
