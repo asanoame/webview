@@ -1,10 +1,9 @@
 package com.xiaoyu.webview
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewStub
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.xiaoyu.webview.utils.AutoServiceLoader
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_SHOW_TOOLBAR
 import com.xiaoyu.webview.utils.Contacts.WEB_TITLE
@@ -39,8 +38,7 @@ class WebActivity : AppCompatActivity() {
         val url = intent.getStringExtra(WEB_URL) ?: ""
         val isCanRefresh = intent.getBooleanExtra(WEB_IS_CAN_REFRESH, true)
         LogUtils.d(msg = "url = $url,isCanRefresh=$isCanRefresh")
-        mWebFragment =
-            AutoServiceLoader.load(IWebViewService::class.java).getWebFragment(url, isCanRefresh)
+        mWebFragment = WebFragment.newInstance(url, isCanRefresh)
         supportFragmentManager.beginTransaction()
             .add(R.id.web_fragment, mWebFragment)
             .commit()

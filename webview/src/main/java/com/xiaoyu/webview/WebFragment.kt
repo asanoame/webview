@@ -1,16 +1,13 @@
 package com.xiaoyu.webview
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.xiaoyu.webview.utils.Contacts.WEB_IS_CAN_REFRESH
 import com.xiaoyu.webview.utils.Contacts.WEB_URL
 import com.xiaoyu.webview.utils.LogUtils
@@ -18,7 +15,7 @@ import com.xiaoyu.webview.webviewprocess.BaseWebView
 import com.xiaoyu.webview.webviewprocess.WebViewCallback
 
 
-class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
+class WebFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, WebViewCallback {
 
     companion object {
         @JvmStatic
@@ -31,7 +28,7 @@ class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
     }
 
     private lateinit var mWebView: BaseWebView
-    private lateinit var mRefreshLayout: SmartRefreshLayout
+    private lateinit var mRefreshLayout: SwipeRefreshLayout
 
     private lateinit var mLoadService: LoadService<Any>
 
@@ -68,9 +65,7 @@ class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
 
     private fun initRefreshLayout(view: View) {
         mRefreshLayout = view.findViewById(R.id.refresh_layout)
-        mRefreshLayout.setEnableRefresh(arguments?.getBoolean(WEB_IS_CAN_REFRESH) ?: true)
-        val constructor = mWebViewKit.refreshHeader.getConstructor(Context::class.java)
-        mRefreshLayout.setRefreshHeader(constructor.newInstance(requireContext()))
+        mRefreshLayout.isEnabled = arguments?.getBoolean(WEB_IS_CAN_REFRESH) ?: true
         mRefreshLayout.setOnRefreshListener(this)
     }
 
@@ -79,7 +74,7 @@ class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
         mWebView.loadUrl(arguments?.getString(WEB_URL) ?: "")
     }
 
-    override fun onRefresh(refreshLayout: RefreshLayout) {
+    override fun onRefresh() {
         mWebView.reload()
     }
 
@@ -105,7 +100,11 @@ class WebFragment : Fragment(), OnRefreshListener, WebViewCallback {
         mLoadService.showCallback(mWebViewKit.loadingCallback)
     }
 
-    override fun onLoadFinish(url: String) {}
+    override fun onLoadFinish(url: String) {
+        if (mRefreshLayout.isRefreshing) {
+            mRefreshLayout.isRefreshing = false
+        }
+    }
 
     override fun onError() {
         mLoadService.showCallback(mWebViewKit.errorCallback)

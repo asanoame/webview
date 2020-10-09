@@ -2,11 +2,8 @@ package com.xiaoyu.webview
 
 import android.content.Context
 import com.google.gson.Gson
-import com.scwang.smart.refresh.header.ClassicsHeader
-import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.xiaoyu.webview.loadsir.ErrorCallback
 import com.xiaoyu.webview.loadsir.LoadingCallback
-import com.xiaoyu.webview.utils.AutoServiceLoader
 import com.xiaoyu.webview.utils.LogUtils
 
 /**
@@ -50,8 +47,6 @@ class WebViewComponent private constructor() {
     var errorCallback: Class<out ErrorCallback> = ErrorCallback::class.java
         private set
 
-    var refreshHeader: Class<out RefreshHeader> = ClassicsHeader::class.java
-
     private var gson: Gson? = null
 
     fun setLoadingCallback(loadingCallback: Class<out LoadingCallback>): WebViewComponent {
@@ -61,11 +56,6 @@ class WebViewComponent private constructor() {
 
     fun setErrorCallback(errorCallback: Class<out ErrorCallback>): WebViewComponent {
         this.errorCallback = errorCallback
-        return this
-    }
-
-    fun setRefreshHeader(refreshHeader: Class<out RefreshHeader>): WebViewComponent {
-        this.refreshHeader = refreshHeader
         return this
     }
 
@@ -89,20 +79,5 @@ class WebViewComponent private constructor() {
             gson = Gson()
         }
         return gson!!
-    }
-
-    fun startWeb(
-        context: Context,
-        url: String,
-        title: String,
-        isShowToolbar: Boolean,
-        isCanRefresh: Boolean
-    ) {
-        AutoServiceLoader.load(IWebViewService::class.java)
-            .startWebActivity(context, url, title, isShowToolbar, isCanRefresh)
-    }
-
-    fun getWebFragment(url: String, isCanRefresh: Boolean): WebFragment {
-        return AutoServiceLoader.load(IWebViewService::class.java).getWebFragment(url, isCanRefresh)
     }
 }
